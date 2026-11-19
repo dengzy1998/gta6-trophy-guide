@@ -1,103 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Leonida Nights — GTA 6 Trophy Guide &amp; Tracker</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1526'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%23ffd166' font-family='Georgia,serif' font-weight='bold'%3EL%3C/text%3E%3C/svg%3E">
+<title>GTA 6 Trophy Guide — Leonida Nights</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e2a3a'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23ffd166' font-family='sans-serif' font-weight='bold'%3E6%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="hero">
-  <div class="skyline" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="skyline" aria-hidden="true"></div>
   <div class="hero-inner">
-    <div class="hero-text">
-      <p class="kicker">Grand Theft Auto VI &middot; PlayStation 5</p>
-      <h1>Leonida Nights</h1>
-      <p class="sub">The complete trophy guide and tracker: all 55 trophies with their official names, descriptions and grades, a cited guide for every one, and your progress saved in this browser.</p>
-      <p class="counts">55 trophies &middot; 1 platinum &middot; 2 gold &middot; 6 silver &middot; 46 bronze &middot; 28 hidden on PlayStation &middot; all single-player, no online trophies</p>
-    </div>
-    <div class="progress-box" id="progressBox">
-      <div class="progress-number"><span id="earnedCount">0</span><span class="of"> / 55 earned</span></div>
-      <div class="bar"><div class="fill" id="progressFill"></div></div>
-      <p class="per-grade" id="perGrade"></p>
-      <p class="progress-note">Progress is saved in this browser (localStorage). Export it to keep a backup.</p>
+    <p class="eyebrow">Grand Theft Auto VI &middot; PlayStation 5</p>
+    <h1>GTA 6 Trophy Guide</h1>
+    <p class="tagline">Leonida Nights — every trophy, every guide, one tracker. Works fully offline.</p>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-text"><span id="progressCount">0 / 55</span><span id="progressPct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <p class="grade-counts" id="gradeCounts"></p>
     </div>
   </div>
 </header>
 
-<div class="missable-callout" role="alert">
-  <span class="warn">!</span>
-  <div>
-    <strong>Only one trophy can be missed: Positive Mental Attitude.</strong>
-    Meditate at every spot across Leonida — one meditation spot is only available in Chapter 1, and there is no mission replay. Do it before you finish Chapter 1, and keep a manual save at the start of every chapter and one before the final mission. Every other trophy can be earned after the story in free roam. Cheats disable trophies and saving.
-  </div>
-</div>
+<main>
+  <section class="toolbar" aria-label="Filters and settings">
+    <input type="search" id="searchBox" placeholder="Search trophies by name or description…" aria-label="Search trophies">
+    <select id="kindFilter" aria-label="Filter by kind">
+      <option value="all">All kinds</option>
+      <option value="story">Story</option>
+      <option value="missable">Missable</option>
+      <option value="collectibles">Collectibles</option>
+      <option value="activities">Activities</option>
+      <option value="crime">Crime</option>
+      <option value="hidden">Hidden</option>
+    </select>
+    <select id="gradeFilter" aria-label="Filter by grade">
+      <option value="all">All grades</option>
+      <option value="platinum">Platinum</option>
+      <option value="gold">Gold</option>
+      <option value="silver">Silver</option>
+      <option value="bronze">Bronze</option>
+    </select>
+    <select id="earnedFilter" aria-label="Filter by earned state">
+      <option value="all">Earned &amp; unearned</option>
+      <option value="earned">Earned only</option>
+      <option value="unearned">Unearned only</option>
+    </select>
+    <label class="spoiler-toggle"><input type="checkbox" id="spoilerToggle" checked> Hide story spoilers</label>
+    <div class="io-buttons">
+      <button type="button" id="exportBtn">Export progress</button>
+      <button type="button" id="importBtn">Import progress</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+      <button type="button" id="roadmapBtn">Roadmap to Platinum</button>
+    </div>
+  </section>
 
-<nav class="views" aria-label="Views">
-  <button type="button" data-view="checklist" class="active" id="viewChecklistBtn">Checklist</button>
-  <button type="button" data-view="roadmap" id="viewRoadmapBtn">Roadmap to the Platinum</button>
-</nav>
+  <p class="list-note" id="listNote"></p>
 
-<section id="checklistView" aria-label="Trophy checklist">
-  <div class="controls">
-    <label class="search">Search <input id="search" type="search" placeholder="Name, description or guide&hellip;" autocomplete="off"></label>
-    <label>Kind
-      <select id="kindFilter">
-        <option value="all">All kinds</option>
-        <option value="story">Story</option>
-        <option value="missable">Missable</option>
-        <option value="collectibles">Collectibles</option>
-        <option value="activities">Activities</option>
-        <option value="crime">Crime</option>
-        <option value="hidden">Hidden</option>
-      </select>
-    </label>
-    <label>Grade
-      <select id="gradeFilter">
-        <option value="all">All grades</option>
-        <option value="platinum">Platinum</option>
-        <option value="gold">Gold</option>
-        <option value="silver">Silver</option>
-        <option value="bronze">Bronze</option>
-      </select>
-    </label>
-    <label>Progress
-      <select id="earnedFilter">
-        <option value="all">Earned &amp; unearned</option>
-        <option value="earned">Earned only</option>
-        <option value="unearned">Unearned only</option>
-      </select>
-    </label>
-    <label class="spoiler-toggle"><input id="spoilerToggle" type="checkbox" checked> Hide story spoilers</label>
-    <button id="exportBtn" type="button">Export progress</button>
-    <label class="import-btn">Import progress <input id="importInput" type="file" accept="application/json,.json"></label>
-  </div>
+  <section class="layout">
+    <div class="list-col">
+      <ul class="trophy-list" id="trophyList"></ul>
+      <p class="empty" id="emptyNote" hidden>No trophies match these filters.</p>
+    </div>
+    <aside class="detail" id="detailPanel" aria-live="polite">
+      <p class="detail-empty">Click a trophy to read its full guide and sources.</p>
+    </aside>
+  </section>
 
-  <div class="layout">
-    <main>
-      <ul id="trophyList" class="trophy-list"></ul>
-      <p id="emptyNote" class="empty-note" hidden>No trophies match these filters.</p>
-    </main>
-    <aside id="detail" class="detail" hidden aria-label="Trophy guide"></aside>
-  </div>
-</section>
-
-<section id="roadmapView" aria-label="Roadmap to the Platinum" hidden>
-  <h2>Roadmap to the Platinum</h2>
-  <p class="roadmap-intro">Five stages, in order. Story first (60&ndash;80 hours), then the stranger strands, then activities and counts, then crime, then cleanup and 100% completion. Only one trophy can be missed — see the warning above — and everything else can be finished after the story in free roam.</p>
-  <div id="roadmapStages" class="stages"></div>
-  <div class="missable-box">
-    <h3>Missable trophies</h3>
-    <p><strong>Positive Mental Attitude</strong> is the only potentially missable trophy: meditate at every spot across Leonida, and do it before you finish Chapter 1, because one spot is only open in Chapter 1 and there is no mission replay. Sources: <a href="https://www.gtavibes.com/guides/gta-6-trophy-list-achievements">GTA Vibes</a>, <a href="https://outputlag.com/guides/gta-6-trophy-list/">Output Lag</a>.</p>
-    <p>Story trophies (chapters 1&ndash;4, the final mission and the mission trophies) cannot be missed — they unlock by playing the story. Everything else can be done after the story in free roam.</p>
-  </div>
-</section>
+  <section class="roadmap" id="roadmapSection">
+    <h2>Roadmap to the Platinum</h2>
+    <p class="roadmap-intro">Five stages, in order. Story trophies cannot be missed; everything else can be finished in free roam after the story.</p>
+    <div class="missable-callout" id="missableCallout">
+      <strong>&#9888; The one missable trophy</strong>
+      <p><strong>Positive Mental Attitude</strong> — meditate at every spot across Leonida. One meditation spot is only available in Chapter 1, and there is no mission replay, so do it before finishing Chapter 1. Keep a manual save at the start of every chapter and one before the final mission. Sources: <a href="https://www.gtavibes.com/guides/gta-6-trophy-list-achievements">GTA Vibes</a> &middot; <a href="https://outputlag.com/guides/gta-6-trophy-list/">Output Lag</a></p>
+    </div>
+    <ol class="stages" id="stagesList"></ol>
+    <p class="roadmap-facts">55 trophies: 1 Platinum, 2 Gold, 6 Silver, 46 Bronze. 28 hidden on PlayStation until earned. No online trophies — all single-player. Cheats disable trophies and saving.</p>
+  </section>
+</main>
 
 <footer>
-  <p>Names, descriptions and grades are the official PlayStation 5 list as published. Every guide is written in our own words and cites its sources; a specific location, step or number is only given where a cited source states it. Sources: <a href="https://www.exophase.com/game/grand-theft-auto-vi-psn/trophies/">Exophase</a>, <a href="https://www.pushsquare.com/news/2026/11/gta-6-ps5-trophies-revealed-100percent-completion-needed-for-the-platinum">Push Square</a>, <a href="https://www.gtavibes.com/guides/gta-6-trophy-list-achievements">GTA Vibes</a>, <a href="https://playday.one/2026/11/18/gta-6-trophy-achievement-list/">Playday.one</a>, <a href="https://outputlag.com/guides/gta-6-trophy-list/">Output Lag</a>, <a href="https://www.keengamer.com/articles/guides/gta-6-trophy-guide-platinum-roadmap-all-55-trophies/">KeenGamer</a>.</p>
-  <p class="fine">Leonida Nights is an unofficial fan-made guide. Not affiliated with Rockstar Games. No official artwork or logo is used. Works offline — this page makes no network requests.</p>
+  <p>An offline guide for the 55 PlayStation 5 trophies of Grand Theft Auto VI. Trophy names, descriptions and grades are as PlayStation publishes them; guides are written in our own words with cited sources. No Rockstar artwork is used. Progress is stored only in your browser.</p>
 </footer>
-<script type="module" src="app.js"></script>
+
+<script src="app.js"></script>
 </body>
 </html>
