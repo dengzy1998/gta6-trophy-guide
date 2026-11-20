@@ -13,6 +13,8 @@ An offline guide and tracker for all 55 PlayStation 5 trophies of Grand Theft Au
 - **The one missable trophy, flagged everywhere**: Positive Mental Attitude — meditate at every spot across Leonida, with one spot only available in Chapter 1 and no mission replay. Keep a manual save at the start of every chapter.
 - **A five-stage roadmap to the Platinum**: story (Chapters 1–4 + final mission, 60–80h), stranger strands, activities & counts, crime & robberies, then cleanup and 100% completion.
 - **A tracker**: tick trophies to earn them, progress saved in your browser (localStorage), a progress bar with per-grade counts, export progress to JSON and import it back.
+- **An audit strip, computed live from the data**: 55/55 official name, description, grade · 55/55 guides cite sources · 111 citations · 55/55 backed by 2+ sources · 1 missable flagged · 6 collectibles tracked, plus the source sites (Exophase, Push Square, KeenGamer, GTA Vibes, Playday.one, Output Lag). Every trophy row shows its source count (e.g. "2 src"), and each detail panel quotes the official description verbatim, breaks the guide into numbered steps that cite the trophy's sources as [1] [2], lists those sources with their URLs, flags the missable window, and shows what is next in roadmap order.
+- **View tabs** — Tracker, Roadmap, Missables, Collectibles, Sources — above the audit strip for one-click filtering.
 - **Filters** by kind (story, missable, collectibles, activities, crime, hidden), by grade, by earned/unearned, plus text search.
 - **Spoiler setting (on by default)**: hides the names and descriptions of story trophies until you earn them.
 

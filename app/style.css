@@ -52,10 +52,10 @@ body {
     radial-gradient(circle at 81% 48%, rgba(45, 212, 191, 0.45) 0 3px, transparent 4px),
     radial-gradient(circle at 94% 20%, rgba(255, 209, 102, 0.5) 0 3px, transparent 4px);
 }
-.hero-inner { position: relative; max-width: 1100px; margin: 0 auto; padding: 40px 20px 28px; }
-.eyebrow { color: var(--teal); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.8rem; margin: 0 0 6px; }
-h1 { margin: 0 0 6px; font-size: 2.6rem; line-height: 1.05; }
-.tagline { color: var(--muted); margin: 0 0 20px; font-size: 1.05rem; }
+.hero-inner { position: relative; max-width: 1100px; margin: 0 auto; padding: 18px 20px 14px; }
+.eyebrow { color: var(--teal); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.8rem; margin: 0 0 4px; }
+h1 { margin: 0 0 4px; font-size: 2rem; line-height: 1.05; }
+.tagline { color: var(--muted); margin: 0 0 12px; font-size: 1rem; }
 
 .progress-text { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; }
 .progress-bar { height: 14px; border-radius: 999px; background: #0a0f1e; border: 1px solid var(--line); overflow: hidden; margin-top: 6px; }
@@ -63,38 +63,55 @@ h1 { margin: 0 0 6px; font-size: 2.6rem; line-height: 1.05; }
 .grade-counts { color: var(--muted); font-size: 0.9rem; margin: 8px 0 0; }
 
 /* --- Layout --- */
-main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+main { max-width: 1100px; margin: 0 auto; padding: 12px 20px 20px; }
 .toolbar {
-  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 12px;
 }
 .toolbar input[type="search"] {
-  flex: 1 1 260px; padding: 10px 12px; border-radius: 8px;
-  border: 1px solid var(--line); background: #0a0f1e; color: var(--ink); font-size: 1rem;
+  flex: 1 1 120px; padding: 8px 10px; border-radius: 8px;
+  border: 1px solid var(--line); background: #0a0f1e; color: var(--ink); font-size: 0.98rem;
 }
 .toolbar select {
-  padding: 10px; border-radius: 8px; border: 1px solid var(--line);
-  background: #0a0f1e; color: var(--ink); font-size: 0.95rem;
+  padding: 8px 6px; border-radius: 8px; border: 1px solid var(--line);
+  background: #0a0f1e; color: var(--ink); font-size: 0.92rem;
 }
 .spoiler-toggle { display: flex; align-items: center; gap: 6px; font-size: 0.95rem; white-space: nowrap; }
 .io-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+/* The Roadmap view tab covers the old toolbar Roadmap button; hiding it
+   keeps the toolbar on one row so the tracker starts higher on screen. */
+.io-buttons #roadmapBtn { display: none; }
 button {
-  padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line);
-  background: var(--panel2); color: var(--ink); font-size: 0.95rem; cursor: pointer;
+  padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--panel2); color: var(--ink); font-size: 0.93rem; cursor: pointer;
 }
 button:hover { border-color: var(--teal); }
-.list-note { color: var(--muted); margin: 14px 2px 10px; }
+.list-note { color: var(--muted); margin: 8px 2px 6px; font-size: 0.92rem; }
+
+/* --- View tabs + audit strip --- */
+.view-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.view-tabs .tab {
+  padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--panel2); color: var(--ink); font-size: 0.95rem; font-weight: 700; cursor: pointer;
+}
+.view-tabs .tab.active { background: var(--gold); border-color: var(--gold); color: #0b1220; }
+.audit-strip {
+  margin-top: 10px; border: 2px solid var(--gold); border-radius: var(--radius);
+  background: #1d2440; padding: 8px 12px;
+}
+.audit-line { margin: 0; font-weight: 800; font-size: 1.02rem; line-height: 1.45; color: var(--ink); }
+.audit-sources { margin: 4px 0 0; color: var(--gold); font-weight: 700; font-size: 0.95rem; }
 
 .layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
 
 /* --- Trophy list --- */
-.trophy-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.trophy-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .trophy-item {
   display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 12px 14px; cursor: pointer; text-align: left; width: 100%;
+  padding: 10px 12px; cursor: pointer; text-align: left; width: 100%;
   color: var(--ink); font: inherit;
 }
 .trophy-item:hover { border-color: var(--teal); }
@@ -114,6 +131,8 @@ button:hover { border-color: var(--teal); }
 .pill.silver { color: #0b1220; background: var(--silver); border-color: var(--silver); }
 .pill.bronze { color: #fff; background: var(--bronze); border-color: var(--bronze); }
 .pill.missable { color: #fff; background: #b91c1c; border-color: #b91c1c; }
+.pill.src { color: var(--teal); border-color: var(--teal); }
+.pill.stage { color: var(--purple); border-color: var(--purple); }
 .pill.hidden-tag { color: var(--purple); border-color: var(--purple); }
 .grade-dot { font-size: 1.6rem; line-height: 1; }
 .grade-dot.platinum { color: var(--gold); }
@@ -126,16 +145,39 @@ button:hover { border-color: var(--teal); }
 .detail {
   position: sticky; top: 16px;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 18px;
+  padding: 14px;
 }
 .detail-empty { color: var(--muted); margin: 0; }
-.detail h2 { margin: 0 0 4px; font-size: 1.4rem; line-height: 1.25; }
+.detail h2 { margin: 0 0 4px; font-size: 1.35rem; line-height: 1.25; }
 .detail .trophy-desc { font-size: 1rem; }
-.detail h3 { margin: 16px 0 6px; font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); }
+.detail h3 { margin: 12px 0 5px; font-size: 0.92rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); }
 .detail p { margin: 6px 0; }
 .detail ul { margin: 6px 0; padding-left: 20px; }
 .detail a { color: var(--teal); }
 .detail .earn-btn { margin-top: 12px; width: 100%; font-weight: 700; }
+.official-label { margin: 8px 0 2px; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+.official-desc {
+  border-left: 4px solid var(--gold); padding: 4px 0 4px 10px; margin: 0 0 6px;
+  font-size: 1.08rem; font-weight: 600; color: var(--ink);
+}
+.missable-analysis {
+  background: #3a1414; border: 1px solid var(--danger); border-radius: 8px;
+  padding: 10px 12px; margin-top: 10px; font-size: 0.97rem;
+}
+.missable-analysis strong { color: #fca5a5; }
+.safe-note {
+  background: #0f2f2a; border: 1px solid var(--teal); border-radius: 8px;
+  padding: 8px 12px; margin-top: 10px; font-size: 0.95rem; color: var(--ink);
+}
+.steps { margin: 6px 0; padding-left: 24px; display: grid; gap: 8px; }
+.steps li { font-size: 1rem; }
+.steps li::marker { font-weight: 800; color: var(--gold); }
+.cite { color: var(--gold); font-weight: 800; font-size: 0.85em; white-space: nowrap; }
+.sources-list li { margin-bottom: 6px; }
+.source-url { display: block; color: var(--muted); font-size: 0.8rem; word-break: break-all; }
+.next-up { border: 1px solid var(--teal); border-radius: 8px; padding: 10px 12px; margin-top: 14px; background: #12233a; }
+.next-up strong { color: var(--teal); letter-spacing: 0.06em; font-size: 0.85rem; }
+.next-up p { margin: 4px 0 0; font-size: 0.95rem; }
 .spoiler-note {
   background: #2a1a3a; border: 1px solid var(--purple); border-radius: 8px;
   padding: 10px 12px; color: var(--muted);

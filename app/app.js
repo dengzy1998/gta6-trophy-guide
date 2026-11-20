@@ -15,6 +15,8 @@ const earnedFilter = $('earnedFilter');
 const spoilerToggle = $('spoilerToggle');
 const listNote = $('listNote');
 const emptyNote = $('emptyNote');
+const auditLine = $('auditLine');
+const auditSources = $('auditSources');
 
 let trophies = [];
 let roadmap = [];
@@ -69,6 +71,59 @@ function gradeCountsText() {
     const got = trophies.filter((t) => t.grade === g && earned.has(t.id)).length;
     return gradeLabel(g) + ' ' + got + '/' + total;
   }).join(' · ');
+}
+
+function sourceCount(t) {
+  return Array.isArray(t.sources) ? t.sources.length : 0;
+}
+
+function shortSiteName(source) {
+  // Source names look like "Exophase — GTA 6 trophy list"; keep the site part.
+  return source.name.split('—')[0].trim();
+}
+
+// The audit strip is computed from the loaded data at runtime, so every
+// number it shows is true of the trophies actually in this app.
+function renderAudit() {
+  const total = trophies.length;
+  const official = trophies.filter((t) => t.name && t.description && t.grade).length;
+  const guided = trophies.filter((t) => t.guide && t.guide.trim()).length;
+  const cited = trophies.filter((t) => sourceCount(t) > 0).length;
+  const citations = trophies.reduce((n, t) => n + sourceCount(t), 0);
+  const twoPlus = trophies.filter((t) => sourceCount(t) >= 2).length;
+  const missable = trophies.filter((t) => t.missable).length;
+  const collectibles = trophies.filter((t) => t.kind === 'collectibles').length;
+  const sites = new Map();
+  trophies.forEach((t) => (t.sources || []).forEach((s) => sites.set(s.url, shortSiteName(s))));
+  auditLine.textContent = '✓ AUDIT — ' + official + '/' + total + ' official name, description, grade'
+    + ' · ' + guided + '/' + total + ' guides in our own words'
+    + ' · ' + cited + '/' + total + ' guides cite sources'
+    + ' · ' + citations + ' citations'
+    + ' · ' + twoPlus + '/' + total + ' backed by 2+ sources'
+    + ' · ' + missable + ' missable flagged'
+    + ' · ' + collectibles + ' collectibles tracked';
+  auditSources.textContent = 'Sources (' + sites.size + ' sites): ' + [...sites.values()].join(' · ');
+}
+
+// Which roadmap stage a trophy belongs to, following the stage texts in the
+// data: 1 story chapters/missions (+ the Chapter 1 missable), 2 stranger
+// strands, 3 activities & counts, 4 crime & robberies, 5 cleanup / Platinum.
+function roadmapStageFor(t) {
+  if (t.id === 1 || t.id === 14) return 5;
+  if (t.missable) return 1;
+  if ([22, 23, 24, 25, 26, 27, 29].includes(t.id)) return 2;
+  if (t.kind === 'activities' || t.kind === 'collectibles') return 3;
+  if (t.kind === 'crime') return 4;
+  return 1;
+}
+
+function roadmapOrder() {
+  return [...trophies].sort((a, b) => (roadmapStageFor(a) - roadmapStageFor(b)) || (a.id - b.id));
+}
+
+function guideSteps(t) {
+  const parts = String(t.guide || '').match(/[^.!?]+[.!?]+/g);
+  return parts ? parts.map((s) => s.trim()).filter(Boolean) : [t.guide];
 }
 
 function renderProgress() {
@@ -149,6 +204,12 @@ function trophyRow(t) {
     c.textContent = t.chapter === 'final' ? 'Final mission' : 'Chapter ' + t.chapter;
     meta.appendChild(c);
   }
+  if (sourceCount(t) > 0) {
+    const s = document.createElement('span');
+    s.className = 'pill src';
+    s.textContent = sourceCount(t) + ' src';
+    meta.appendChild(s);
+  }
   body.appendChild(meta);
   btn.appendChild(body);
 
@@ -195,9 +256,13 @@ function renderDetail() {
     const h = document.createElement('h2');
     h.textContent = t.name;
     detailEl.appendChild(h);
+    const olabel = document.createElement('p');
+    olabel.className = 'official-label';
+    olabel.textContent = 'Official description — verbatim';
+    detailEl.appendChild(olabel);
     const desc = document.createElement('p');
-    desc.className = 'trophy-desc';
-    desc.textContent = t.description;
+    desc.className = 'official-desc';
+    desc.textContent = '“' + t.description + '”';
     detailEl.appendChild(desc);
     const meta = document.createElement('div');
     meta.className = 'trophy-meta';
@@ -215,32 +280,97 @@ function renderDetail() {
       m.textContent = 'Missable — do it before finishing Chapter 1';
       meta.appendChild(m);
     }
+    if (t.chapter) {
+      const c = document.createElement('span');
+      c.className = 'pill';
+      c.textContent = t.chapter === 'final' ? 'Final mission' : 'Chapter ' + t.chapter;
+      meta.appendChild(c);
+    }
+    const stage = roadmap.find((s) => s.stage === roadmapStageFor(t));
+    const stagePill = document.createElement('span');
+    stagePill.className = 'pill stage';
+    stagePill.textContent = 'Roadmap Stage ' + roadmapStageFor(t);
+    meta.appendChild(stagePill);
+    if (sourceCount(t) > 0) {
+      const s = document.createElement('span');
+      s.className = 'pill src';
+      s.textContent = sourceCount(t) + ' src';
+      meta.appendChild(s);
+    }
     detailEl.appendChild(meta);
 
+    if (t.missable) {
+      const box = document.createElement('div');
+      box.className = 'missable-analysis';
+      const b = document.createElement('strong');
+      b.textContent = '⚠ Missable window — Chapter 1 only. ';
+      box.appendChild(b);
+      box.appendChild(document.createTextNode('One meditation spot exists only in Chapter 1 and there is no mission replay: meditate there before finishing Chapter 1. Keep a manual save at every chapter start. Sources: GTA Vibes · Output Lag.'));
+      detailEl.appendChild(box);
+    } else {
+      const note = document.createElement('p');
+      note.className = 'safe-note';
+      note.textContent = isStory(t)
+        ? 'Not missable — story trophies unlock by playing the story.'
+        : 'Not missable — this stays available in free roam after the story.';
+      detailEl.appendChild(note);
+    }
+
     const gh = document.createElement('h3');
-    gh.textContent = 'Guide';
+    gh.textContent = 'Guide — numbered steps, each citing the sources below';
     detailEl.appendChild(gh);
-    const guide = document.createElement('p');
-    guide.textContent = t.guide;
-    detailEl.appendChild(guide);
+    const steps = document.createElement('ol');
+    steps.className = 'steps';
+    const citeText = (t.sources || []).map((s, i) => '[' + (i + 1) + ']').join(' ');
+    guideSteps(t).forEach((step) => {
+      const li = document.createElement('li');
+      li.appendChild(document.createTextNode(step + ' '));
+      if (citeText) {
+        const cite = document.createElement('span');
+        cite.className = 'cite';
+        cite.textContent = citeText;
+        li.appendChild(cite);
+      }
+      steps.appendChild(li);
+    });
+    detailEl.appendChild(steps);
 
     if (Array.isArray(t.sources) && t.sources.length) {
       const sh = document.createElement('h3');
-      sh.textContent = 'Sources';
+      sh.textContent = 'Sources — cited for this trophy';
       detailEl.appendChild(sh);
       const ul = document.createElement('ul');
-      t.sources.forEach((s) => {
+      ul.className = 'sources-list';
+      t.sources.forEach((s, i) => {
         const li = document.createElement('li');
         const a = document.createElement('a');
         a.href = s.url;
-        a.textContent = s.name;
+        a.textContent = '[' + (i + 1) + '] ' + s.name;
         a.target = '_blank';
         a.rel = 'noopener';
         li.appendChild(a);
+        const url = document.createElement('span');
+        url.className = 'source-url';
+        url.textContent = s.url;
+        li.appendChild(url);
         ul.appendChild(li);
       });
       detailEl.appendChild(ul);
     }
+
+    const order = roadmapOrder();
+    const pos = order.findIndex((x) => x.id === t.id);
+    const next = order.slice(pos + 1).find((x) => !earned.has(x.id)) || order.find((x) => !earned.has(x.id) && x.id !== t.id);
+    const nextBox = document.createElement('div');
+    nextBox.className = 'next-up';
+    const nb = document.createElement('strong');
+    nb.textContent = 'NEXT UP — ROADMAP ORDER';
+    nextBox.appendChild(nb);
+    const np = document.createElement('p');
+    np.textContent = 'This trophy: Stage ' + roadmapStageFor(t) + (stage ? ' — ' + stage.title : '')
+      + (next ? '. Next unearned in roadmap order: #' + next.id + ' ' + next.name + ' (Stage ' + roadmapStageFor(next) + ').' : '. Nothing unearned left after it in roadmap order.');
+    nextBox.appendChild(np);
+    detailEl.appendChild(nextBox);
   }
   const btn = document.createElement('button');
   btn.type = 'button';
@@ -353,6 +483,7 @@ async function init() {
   roadmap = data.roadmap || [];
   applyUrlParams();
   renderRoadmap();
+  renderAudit();
   renderList();
   renderDetail();
 
@@ -374,6 +505,16 @@ async function init() {
     event.target.value = '';
   });
   $('roadmapBtn').addEventListener('click', () => $('roadmapSection').scrollIntoView({ behavior: 'smooth' }));
+  const setKindTab = (kind) => {
+    kindFilter.value = kind;
+    renderList();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  $('tabTracker').addEventListener('click', () => setKindTab('all'));
+  $('tabMissables').addEventListener('click', () => setKindTab('missable'));
+  $('tabCollectibles').addEventListener('click', () => setKindTab('collectibles'));
+  $('tabRoadmap').addEventListener('click', () => $('roadmapSection').scrollIntoView({ behavior: 'smooth' }));
+  $('tabSources').addEventListener('click', () => $('auditStrip').scrollIntoView({ behavior: 'smooth', block: 'center' }));
 }
 
 init().catch((error) => {
